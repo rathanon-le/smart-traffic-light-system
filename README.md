@@ -29,3 +29,4 @@
 ระบบต้องสามารถตอบสนองต่อเหตุการณ์จาก PIR Sensor และปุ่มกดได้ทันที
 
 เหตุการณ์ใหม่ต้องไม่ทำให้ระบบหลักหยุดทำงาน (Non-blocking)
+<img width="975" height="358" alt="image" src="https://github.com/user-attachments/assets/d26326a7-3b5a-4f5e-ad7d-2efcefb59412" />
