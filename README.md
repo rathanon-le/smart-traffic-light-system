@@ -29,4 +29,91 @@
 ระบบต้องสามารถตอบสนองต่อเหตุการณ์จาก PIR Sensor และปุ่มกดได้ทันที
 
 เหตุการณ์ใหม่ต้องไม่ทำให้ระบบหลักหยุดทำงาน (Non-blocking)
-<img width="975" height="358" alt="image" src="https://github.com/user-attachments/assets/d26326a7-3b5a-4f5e-ad7d-2efcefb59412" />
+<img width="1554" height="658" alt="image" src="https://github.com/user-attachments/assets/c28fb279-3eec-4571-843f-7a7ad41b531f" />
+<img width="853" height="578" alt="image" src="https://github.com/user-attachments/assets/2c72c28f-df4c-4294-8709-7cb80870a4bb" />
+<img width="1030" height="773" alt="image" src="https://github.com/user-attachments/assets/3c0a1b1b-c7a8-438f-9be7-cb40f3d7eff8" />
+
+
+Detailed design
+โครงสร้างการทำงานของระบบ (Internal Structure)
+
+การออกแบบ Task ในระบบ RTOS
+
+การสื่อสารระหว่าง Task ด้วย Event Group
+
+การจัดลำดับความสำคัญของ Task
+
+
+
+Button task          HIGH Priority Level
+PIRSensorTask     HIGH Priority Level
+TrafficLightTask  MEDIUM Priority Level
+PedestrianTask    MEDIUM Priority Level
+WarningTask        MEDIUM Priority Level
+OLEDTask             LOW Priority Level
+Architectural Design Summary 
+
+สถาปัตยกรรมของระบบถูกออกแบบให้เป็นแบบ Event-Driven บน RTOS
+โดยแยกการทำงานเป็นหลาย Task ที่มีหน้าที่ชัดเจน
+และใช้ Event Group ในการสื่อสารระหว่าง Task
+เพื่อให้ระบบตอบสนองต่อเหตุการณ์ได้แบบ Real-time
+พร้อมทั้งคงไว้ซึ่งความปลอดภัยและความเสถียรของระบบ
+
+
+ผลที่คาดหวัง
+
+ไฟคนข้ามเป็นไฟเขียวภายในเวลาที่กำหนด
+
+เมื่อหมดเวลา ระบบกลับสู่โหมดปกติ
+
+OLED แสดง “car green”
+
+ ผ่านการทดสอบ เมื่อ คนสามารถข้ามถนนได้อย่างปลอดภัย
+________________________________________
+3: การข้ามถนนโดยไม่กดปุ่ม (Illegal Crossing)
+เงื่อนไข
+PIR Sensor ตรวจพบการเคลื่อนไหว
+
+ไม่มีการกดปุ่มขอข้าม
+
+
+ผลที่คาดหวัง
+ระบบไม่เปิดไฟเขียวสำหรับคนข้าม
+
+LED เตือน
+
+OLED แสดงข้อความเตือน เช่น
+  Do not cross – Please press button”
+ ผ่านการทดสอบ เมื่อ ระบบแจ้งเตือนและไม่อนุญาตให้ข้าม
+________________________________________
+4: ความปลอดภัยของระบบ (Safety Validation)
+เงื่อนไข
+เกิด Illegal Crossing ขณะไฟรถเป็นสีเขียว
+
+ผลที่คาดหวัง
+ระบบเข้าสู่โหมดควบคุมความปลอดภัย
+
+ไม่มีสถานการณ์ที่ไฟรถเขียวและไฟคนเขียวพร้อมกัน
+
+ระบบยังคงทำงานต่อเนื่อง
+
+ ผ่านการทดสอบ เมื่อ ไม่เกิดสภาวะที่อาจก่อให้เกิดอุบัติเหตุ
+________________________________________
+5: ความเสถียรของระบบ
+เงื่อนไข
+ระบบทำงานต่อเนื่องเป็นเวลานาน
+
+มีการกดปุ่มและตรวจจับจาก PIR Sensor หลายครั้ง
+
+ผลที่คาดหวัง
+ระบบไม่ค้าง ไม่รีเซตเอง
+
+การตอบสนองยังเป็น Real-time
+
+ไม่มี Event ค้างคาในระบบ
+
+ ผ่านการทดสอบ เมื่อ ระบบทำงานได้อย่างเสถียร
+
+
+
+
